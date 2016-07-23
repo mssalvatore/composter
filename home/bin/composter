@@ -1,18 +1,50 @@
 #!/bin/bash
 
-archiveDir=$compost/archive/`date +%Y_%m_%d_%H_%M`
+usage()
+{
+    echo "Usage:";
+    echo "  composter DIR [DAYS1] [DAYS2]";
+    echo "";
+    echo "Description:";
+    echo "  Moves files in DIR to DIR/archive if they're older than DAYS1. Delete all files older than DAYS2";
+    echo "    DAYS1 Default: 7";
+    echo "    DAYS2 Default: 30";
+    echo "";
+}
+
+DAYS1=7;
+DAYS2=30;
+
+if [[ $# -lt 1 ]]; then
+    echo "Must specify a directory!"
+    usage
+    exit
+fi
+
+if [[ $# -ge 1 ]]; then
+    DIR=$1
+fi
+
+if [[ $# -ge 2 ]]; then
+    DAYS1=$2
+fi
+
+if [[ $# -ge 3 ]]; then
+    DAYS2=$3
+fi
+
+archiveDir=$DIR/archive/`date +%Y_%m_%d_%H_%M`
 mkdir -p $archiveDir
 
-#for f in `find $compost -type f -mtime +7 -exec base64str '{}' \;`
-for f in `find $compost -type f -mtime +7`
+for f in `find $DIR -type f -mtime +$DAYS1`
 do
-    if [[ $string != *"$compost/archive/" ]]
+    if [[ $f != *"$DIR/archive/"* ]]
     then
         myDir=`dirname $f`
-        mkdir -p $archiveDir/${myDir#$compost}
-        mv $f $archiveDir/${myDir#$compost}
+        mkdir -p $archiveDir/${myDir#$DIR}
+        mv $f $archiveDir/${myDir#$DIR}
     fi
 done
 
-find $compost/archive/ -type f -mtime +30 -exec rm {} \;
-find $compost -type d -empty | xargs rmdir
+find $DIR/archive/ -type f -mtime +$DAYS2 -exec rm {} \;
+find $DIR -type d -empty -delete

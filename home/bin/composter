@@ -1,0 +1,18 @@
+#!/bin/bash
+
+archiveDir=$compost/archive/`date +%Y_%m_%d_%H_%M`
+mkdir -p $archiveDir
+
+#for f in `find $compost -type f -mtime +7 -exec base64str '{}' \;`
+for f in `find $compost -type f -mtime +7`
+do
+    if [[ $string != *"$compost/archive/" ]]
+    then
+        myDir=`dirname $f`
+        mkdir -p $archiveDir/${myDir#$compost}
+        mv $f $archiveDir/${myDir#$compost}
+    fi
+done
+
+find $compost/archive/ -type f -mtime +30 -exec rm {} \;
+find $compost -type d -empty | xargs rmdir

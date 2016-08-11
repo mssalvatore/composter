@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Change IFS so for loop doesn't break up file names with spaces
+IFS=$'\n'
+
 usage()
 {
     echo "Usage:";

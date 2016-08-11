@@ -39,6 +39,8 @@ fi
 archiveDir=$DIR/archive/`date +%Y_%m_%d_%H_%M`
 mkdir -p $archiveDir
 
+find $DIR -type f -mtime +$DAYS2 -exec rm {} \;
+
 for f in `find $DIR -type f -mtime +$DAYS1`
 do
     if [[ $f != *"$DIR/archive/"* ]]
@@ -49,5 +51,4 @@ do
     fi
 done
 
-find $DIR/archive/ -type f -mtime +$DAYS2 -exec rm {} \;
 find $DIR -type d -empty -delete

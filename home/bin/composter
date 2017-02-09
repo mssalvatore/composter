@@ -41,14 +41,11 @@ mkdir -p $archiveDir
 
 find $DIR -type f -mtime +$DAYS2 -exec rm {} \;
 
-for f in `find $DIR -type f -mtime +$DAYS1`
+for f in `find $DIR -type f -mtime +$DAYS1 | grep -vP "($DIR)(archive/).*"`
 do
-    if [[ $f != *"$DIR/archive/"* ]]
-    then
-        myDir=`dirname $f`
-        mkdir -p $archiveDir/${myDir#$DIR}
-        mv $f $archiveDir/${myDir#$DIR}
-    fi
+    myDir=`dirname $f`/
+    mkdir -p $archiveDir/${myDir#$DIR}
+    mv $f $archiveDir/${myDir#$DIR}
 done
 
 find $DIR -type d -empty -delete

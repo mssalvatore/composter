@@ -15,6 +15,12 @@ usage()
     echo "";
 }
 
+grepExec='grep'
+
+if [[ `uname` == 'Darwin' ]]; then
+    grepExec='ggrep'
+fi
+
 DAYS1=7;
 DAYS2=30;
 
@@ -41,7 +47,7 @@ mkdir -p $archiveDir
 
 find $DIR -type f -mtime +$DAYS2 -exec rm {} \;
 
-for f in `find $DIR -type f -mtime +$DAYS1 | grep -vP "($DIR)(archive/).*"`
+for f in `find $DIR -type f -mtime +$DAYS1 | $grepExec -vP "($DIR)(archive/).*"`
 do
     myDir=`dirname $f`/
     mkdir -p $archiveDir/${myDir#$DIR}

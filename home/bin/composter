@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Change IFS so for loop doesn't break up file names with spaces
+PATH=$PATH:/usr/local/bin
 IFS=$'\n'
 
 usage()
@@ -16,9 +17,11 @@ usage()
 }
 
 grepExec='grep'
+findExec='find'
 
 if [[ `uname` == 'Darwin' ]]; then
     grepExec='ggrep'
+    findExec='gfind'
 fi
 
 DAYS1=7;
@@ -45,13 +48,13 @@ fi
 archiveDir=$DIR/archive/`date +%Y_%m_%d_%H_%M`
 mkdir -p $archiveDir
 
-find $DIR -type f -mtime +$DAYS2 -exec rm {} \;
+$findExec $DIR -type f -mtime +$DAYS2 -exec rm {} \;
 
-for f in `find $DIR -type f -mtime +$DAYS1 | $grepExec -vP "($DIR)(archive/).*"`
+for f in `$findExec $DIR -type f -mtime +$DAYS1 | $grepExec -vP "($DIR)archive/.*"`
 do
     myDir=`dirname $f`/
     mkdir -p $archiveDir/${myDir#$DIR}
     mv $f $archiveDir/${myDir#$DIR}
 done
 
-find $DIR -type d -empty -delete
+$findExec $DIR -type d -empty -delete

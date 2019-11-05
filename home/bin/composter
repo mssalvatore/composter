@@ -57,4 +57,4 @@ do
     mv $f $archiveDir/${myDir#$DIR}
 done
 
-$findExec -P $DIR -type d -empty -delete
+$findExec -P $DIR/* -type d -empty -delete

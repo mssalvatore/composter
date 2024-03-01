@@ -48,9 +48,9 @@ fi
 archiveDir=$DIR/archive/`date +%Y_%m_%d_%H_%M`
 mkdir -p $archiveDir
 
-$findExec -P $DIR -type f -mtime +$DAYS2 -exec rm {} \;
+$findExec -P $DIR -type f,s,l -mtime +$DAYS2 -exec rm {} \;
 
-for f in `$findExec -P $DIR -type f -mtime +$DAYS1 | $grepExec -vP "($DIR)archive/.*"`
+for f in `$findExec -P $DIR -type f,s,l -mtime +$DAYS1 | $grepExec -vP "($DIR)archive/.*"`
 do
     myDir=`dirname $f`/
     mkdir -p $archiveDir/${myDir#$DIR}
